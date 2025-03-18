@@ -16,7 +16,7 @@ export default defineConfig({
       },
       name: 'ui', 
       fileName: (format) => `ui.${format}.js`,
-      formats: ['es', 'cjs', 'umd'],
+      formats: ['es', 'cjs'],
     }, 
     rollupOptions: { 
       external: Object.keys(peerDependencies), 
