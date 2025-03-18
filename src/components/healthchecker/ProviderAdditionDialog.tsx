@@ -1,0 +1,50 @@
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+  } from "./shad/dialog";
+import { Input } from "./shad/input";
+import { useState } from "react";
+import { Button } from "./shad/button";
+
+interface ProviderAdditionDialogProps {
+  isOpened: boolean;
+  onDialogOpenChange: (isOpened: boolean) => void;
+  onProviderSubmit: (provider: string) => void;
+}
+
+const ProviderAdditionDialog: React.FC<ProviderAdditionDialogProps> = ({
+  isOpened,
+  onDialogOpenChange,
+  onProviderSubmit
+}) => {
+
+  const [providerValue, setProviderValue] = useState<string>("");
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && isOpened) {
+      onProviderSubmit(providerValue);
+    }
+  };
+
+  return (
+    <Dialog open={isOpened} onOpenChange={onDialogOpenChange}>
+      <DialogContent>
+        <DialogHeader><DialogTitle>Add new address of provider</DialogTitle></DialogHeader>
+        <Input
+          onKeyDown={handleKeyDown}
+          value={providerValue}
+          autoFocus={true}
+          className="focus:bg-white dark:focus:bg-gray-700"
+          type="text"
+          data-testid="api-address-input"
+          onChange={(e) => setProviderValue(e.target.value)}
+        />
+        <Button onClick={() => {onProviderSubmit(providerValue)}}>Submit</Button>
+      </DialogContent>
+    </Dialog>
+  )
+};
+
+export default ProviderAdditionDialog;

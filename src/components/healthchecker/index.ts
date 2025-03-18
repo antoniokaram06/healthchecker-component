@@ -1,1 +1,1 @@
-export {HealthChecker} from "./healthchecker";
+export {HealthCheckerComponent} from "./healthchecker";
