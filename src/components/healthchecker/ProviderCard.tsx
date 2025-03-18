@@ -47,7 +47,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
   }
 
   return (
-    <Card className={cn("ui-grid ui-grid-cols-10 ui-grid-rows-5 lg:ui-grid-rows-2 ui-gap-y-1 ui-my-1 ui-p-2 ui-mx-2 lg:ui-mx-0", {"outline outline-2 outline-offset-2 mb-6": isTop})}>
+    <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2 mx-2 lg:mx-0", {"outline outline-2 outline-offset-2 mb-6": isTop})}>
       <div className="lg:col-start-1 lg:col-span-1 lg:row-start-1 lg:row-span-full justify-self-center self-center">{index}</div>
       <div className={cn("row-start-1 col-start-2 col-span-6 self-center", {"text-red-600": disabled})}>
         {providerLink} {isFallback ? "- fallback" : null}
