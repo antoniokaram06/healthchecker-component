@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { HealthCheckerComponent } from "./healthchecker";
-import HealthCheckerService from "./HealthCheckerService";
-import { ApiChecker } from "./HealthCheckerService";
+import { HealthCheckerService } from "../../service";
+import { ApiChecker } from "../../service";
 import { HealthChecker, TWaxApiRequest, createHiveChain } from "@hiveio/wax/vite";
 
 export type ExplorerNodeApi = {
@@ -105,6 +105,7 @@ const meta = {
     }
   },
 } satisfies Meta<typeof HealthCheckerComponent>;
+console.log("HC SERVICE", hcService);
 
 export default meta;
 type Story = StoryObj<typeof meta>;

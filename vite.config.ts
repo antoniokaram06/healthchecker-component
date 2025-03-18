@@ -10,7 +10,10 @@ export default defineConfig({
   ],
   build: { 
     lib: { 
-      entry: './src/index.ts', 
+      entry: {
+        component: './src/index.ts',
+        service: 'src/service.ts'
+      },
       name: 'ui', 
       fileName: (format) => `ui.${format}.js`,
       formats: ['es', 'cjs', 'umd'],
