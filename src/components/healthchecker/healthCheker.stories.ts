@@ -105,7 +105,6 @@ const meta = {
     }
   },
 } satisfies Meta<typeof HealthCheckerComponent>;
-console.log("HC SERVICE", hcService);
 
 export default meta;
 type Story = StoryObj<typeof meta>;

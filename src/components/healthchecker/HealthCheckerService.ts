@@ -60,11 +60,9 @@ class HealthCheckerService extends EventTarget {
     this.changeNodeAddress = changeNodeAddress;
     this.createHealthChecker();
     this.initializeDefaultChecks();
-    console.log("TRY ENDING OF SERVICE");
   }
 
   emit(eventName: string, detail?: any) {
-    console.log('EMIT!!!');
     this.dispatchEvent(new CustomEvent(eventName, { detail }));
   }
 
@@ -156,7 +154,6 @@ class HealthCheckerService extends EventTarget {
   }
 
   updateAppAfterScoredEndpointsChange = (data: Array<TScoredEndpoint>) => {
-    console.log('TEST IT TEST IT HERE', JSON.stringify(data));
     console.log(JSON.stringify(data)); 
     this.checkForFallbacks(data); 
     if (data.length)this.scoredEndpoints = data;
@@ -164,7 +161,6 @@ class HealthCheckerService extends EventTarget {
   }
 
   createHealthChecker = async () => {
-    console.log("CREATE HC");
     this.healthChecker?.on('error', error => console.error(error.message));
     this.healthChecker?.on("data", this.updateAppAfterScoredEndpointsChange);
     this.healthChecker?.on("validationerror", error => this.markValidationError(error.apiEndpoint.id, error.request.endpoint, error));
@@ -182,7 +178,6 @@ class HealthCheckerService extends EventTarget {
 
   registerCalls = async () => {
     const registeredEndpoints = new Map<number, string>();
-    console.log('REGISTER CALLS');
     if (this.apiCheckers)
     for (const checker of this.apiCheckers) {
       const testHC = await this.healthChecker?.register(checker!.method, checker!.params, checker!.validatorFunction, this.providers);
