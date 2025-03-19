@@ -8,8 +8,8 @@ import { Badge } from "./shad/badge";
 import ProviderCard from "./ProviderCard";
 import ProviderAdditionDialog from "./ProviderAdditionDialog";
 import ValidationErrorDialog from "./ValidationErrorDialog";
-import { ValidationErrorDetails, ApiChecker } from "../../service.ts"; 
-import { HealthCheckerService } from "../../service.ts"; 
+import { ValidationErrorDetails, ApiChecker } from "./index.ts"; 
+import { HealthCheckerService } from "./index.ts";
 
 
 interface HealthCheckerComponentProps {

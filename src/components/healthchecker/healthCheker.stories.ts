@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { HealthCheckerComponent } from "./healthchecker";
-import { HealthCheckerService } from "../../service";
-import { ApiChecker } from "../../service";
+import { HealthCheckerService } from "./index";
+import { ApiChecker } from "./index";
 import { HealthChecker, TWaxApiRequest, createHiveChain } from "@hiveio/wax/vite";
 
 export type ExplorerNodeApi = {

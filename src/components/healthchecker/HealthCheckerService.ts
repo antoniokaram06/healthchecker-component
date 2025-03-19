@@ -261,4 +261,4 @@ class HealthCheckerService extends EventTarget {
 
 }
 
-export default HealthCheckerService;
+export {HealthCheckerService};

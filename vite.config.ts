@@ -11,12 +11,11 @@ export default defineConfig({
   build: { 
     lib: { 
       entry: {
-        component: './src/index.ts',
-        service: 'src/service.ts'
+        component: './src/index.ts'
       },
-      name: 'ui', 
-      fileName: (format) => `ui.${format}.js`,
-      formats: ['es', 'cjs'],
+      name: 'healthchecker', 
+      fileName: (format) => `healthchecker.${format}.js`,
+      formats: ['es', 'cjs', 'umd' ],
     }, 
     rollupOptions: { 
       external: Object.keys(peerDependencies), 

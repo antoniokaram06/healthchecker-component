@@ -1,13 +1,14 @@
 {
-  "name": "ui",
-  "private": true,
+  "name": "healthchecker",
+  "private": false,
   "version": "0.0.0",
   "type": "module",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/ui.es.js",
-      "require": "./dist/ui.umd.js"
+      "import": "./dist/healthchecker.es.js",
+      "require": "./dist/healthchecker.umd.js",
+      "types": "./dist/index.d.ts"
     },
     "./styles.css": {
       "require": "./dist/styles.css",
