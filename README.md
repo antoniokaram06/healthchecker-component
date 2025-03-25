@@ -1,22 +1,12 @@
-# React + TypeScript + Vite + Storybook
+# Healhchecker Component for export
 
-A starter component library that uses React, Typescript, Vite and Storybook.
+This project is HealthChecker Component using Wax to check the data of APIs, and providing all the necessary factors for display. You can import it to your React project, configure the props and use the generic component for handling APIs.
 
-For an explanation on how this was made you can watch this video:
-
-https://www.youtube.com/watch?v=3OHZmM0ihIQ
-
-
-### Get started
-`npm install`
-
-### Running Storybook
-`npm run storybook`
-
-### Building Storybook
-`npm run build-storybook`
-
-### Build Component Library
-`npm run build`
-
+### Techstack
+* React
+* Tailwind
+* Shad UI
+* Typescript
+* Vite
+* Wax
 
