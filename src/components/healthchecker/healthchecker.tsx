@@ -136,7 +136,7 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
         <Button className="row-start-4 lg:row-start-2 row-span-1 col-span-full lg:col-span-1 lg:col-end-5" onClick={() => {resetProviders()}}>Restore default API server set</Button>
       </Card>
       {renderProviders()}
-      <Button onClick={() => {setIsProviderAdditionDialogOpened(true)}} className="w-full"><Plus /></Button>
+      <Button onClick={() => {setIsProviderAdditionDialogOpened(true)}} className="w-full hover:bg-primary"><Plus /></Button>
       <ProviderAdditionDialog 
         isOpened={isProviderAdditionDialogOpened}
         onDialogOpenChange={setIsProviderAdditionDialogOpened}
