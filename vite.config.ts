@@ -13,8 +13,8 @@ export default defineConfig({
       entry: {
         component: './src/index.ts'
       },
-      name: 'healthchecker', 
-      fileName: (format) => `healthchecker.${format}.js`,
+      name: 'healthchecker-component', 
+      fileName: (format) => `healthchecker-component.${format}.js`,
       formats: ['es', 'cjs', 'umd' ],
     }, 
     rollupOptions: { 

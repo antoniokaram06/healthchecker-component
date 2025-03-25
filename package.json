@@ -1,13 +1,13 @@
 {
-  "name": "healthchecker",
+  "name": "healthchecker-component",
   "private": false,
   "version": "0.0.0",
   "type": "module",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/healthchecker.es.js",
-      "require": "./dist/healthchecker.umd.js",
+      "import": "./dist/healthchecker-component.es.js",
+      "require": "./dist/healthchecker-component.umd.js",
       "types": "./dist/index.d.ts"
     },
     "./styles.css": {
