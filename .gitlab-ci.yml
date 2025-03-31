@@ -8,6 +8,15 @@ variables:
   GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: recursive
 
+include:
+  - project: 'hive/common-ci-configuration'
+    ref: 590bfd88a491efba5a39571bc2c82ffbabda2ec8
+    file:
+      - '/templates/npm_projects.gitlab-ci.yml'
+
+default:
+  tags:
+    - public-runner-docker
 
 lint:
   stage: .pre
