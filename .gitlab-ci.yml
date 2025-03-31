@@ -1,0 +1,58 @@
+stages:
+  - .pre
+  - build
+  - deploy
+
+variables:
+  GIT_DEPTH: 0
+  GIT_STRATEGY: clone
+  GIT_SUBMODULE_STRATEGY: recursive
+
+
+lint:
+  stage: .pre
+  extends: .npm_based_job_base
+  script:
+    - npm run lint-ci
+  
+
+build:
+  stage: build
+  extends: .npm_build_template
+  variables:
+    DIST_DIR: "$CI_PROJECT_DIR/dist"
+    NPM_PACKAGE_SCOPE: "@hiveio"
+    NPM_PACKAGE_NAME: "healthchecker-component"
+  needs:
+    - job: lint
+
+deploy_healthchecker_dev_package:
+  extends: .npm_deploy_package_template
+  stage: deploy
+  variables:
+    SOURCE_DIR: "${CI_PROJECT_DIR}/src"
+    PACKAGE_TGZ_PATH: "${BUILT_PACKAGE_PATH}"
+    NPM_PACKAGE_SCOPE: "@hiveio"
+    GIT_SUBMODULE_STRATEGY: "normal"
+
+  needs:
+    - job: build
+  tags:
+    - public-runner-docker
+
+deploy_healthchecker_production_public_npm:
+  extends: .registry_npmjs_org_deploy_package_template
+  stage: deploy
+  variables:
+    NPM_PUBLISH_TOKEN: "$INTERNAL_HIDDEN_PUBLISH_TOKEN"
+    NPM_PACKAGE_NAME: "healhchecker-component"
+    SOURCE_DIR: "${CI_PROJECT_DIR}/src"
+    PACKAGE_TGZ_PATH: "${BUILT_PACKAGE_PATH}"
+    GIT_SUBMODULE_STRATEGY: "normal"
+
+  needs:
+    - job: build
+      artifacts: true
+
+  tags:
+    - public-runner-docker
