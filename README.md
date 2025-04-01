@@ -10,3 +10,5 @@ This project is HealthChecker Component using Wax to check the data of APIs, and
 * Vite
 * Wax
 
+### Structure
+The project is using Wax's Healthchecker to regularly check for API's score. Then it wrap the data up in dedicated service, that will be passed as a prop to custom component. On the service declaration level devs may add list of checks and default providers.
