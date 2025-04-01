@@ -22,6 +22,7 @@ build:
   stage: build
   extends: .npm_build_template
   variables:
+    SOURCE_DIR: "${CI_PROJECT_DIR}/src"
     DIST_DIR: "$CI_PROJECT_DIR/dist"
     NPM_PACKAGE_SCOPE: "@hiveio"
     NPM_PACKAGE_NAME: "healthchecker-component"
