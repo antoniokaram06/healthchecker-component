@@ -50,7 +50,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
     <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2 mx-2 lg:mx-0", {"outline outline-2 outline-offset-2 mb-6": isTop})}>
       <div className="lg:col-start-1 lg:col-span-1 lg:row-start-1 lg:row-span-full justify-self-center self-center">{index}</div>
       <div className={cn("row-start-1 col-start-2 col-span-6 self-center", {"text-red-600": disabled})}>
-        {providerLink} {isFallback ? "- fallback" : null}
+        {providerLink} {isFallback ? <span className="text-amber-600">- fallback</span>  : null}
       </div>
       <div className="row-start-2 lg:row-start-1 col-start-1 lg:col-start-8 col-span-full lg:col-span-2 self-center">
         {score !== -1 ?
@@ -58,7 +58,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
           <Loader2 className="animate-spin h-6 w-6 ..." /> 
         }
       </div> 
-      {!isSelected && 
+      {!isSelected ? 
         <>
           <Button className="row-start-1 col-start-10 col-span-1 hover:bg-slate-400 bg-transparent rounded place-self-end w-fit" onClick={() => {deleteProvider(providerLink)}}>
             <X />
@@ -78,6 +78,8 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
             }
           </div>
         </>
+        :
+        <div className="text-green-600">Selected</div>
       }
       <div className={cn("row-start-3 row-span-2 lg:row-start-2 lg:row-span-1 flex items-center col-start-1 col-span-10 lg:col-span-6 lg:col-start-2 flex-wrap", {"py-2": isSelected})}>
         {disabled ?
