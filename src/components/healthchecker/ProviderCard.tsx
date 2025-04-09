@@ -79,7 +79,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
           </div>
         </>
         :
-        <div className="text-green-600">Selected</div>
+        <div className="text-green-600 row-start-5 lg:row-start-2 col-start-1 lg:col-start-8 col-span-10 lg:col-span-3">Selected</div>
       }
       <div className={cn("row-start-3 row-span-2 lg:row-start-2 lg:row-span-1 flex items-center col-start-1 col-span-10 lg:col-span-6 lg:col-start-2 flex-wrap", {"py-2": isSelected})}>
         {disabled ?
