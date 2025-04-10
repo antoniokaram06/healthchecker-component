@@ -40,10 +40,12 @@ class HealthCheckerService extends EventTarget {
   public fallbacks?: string[];
   public providers?: string[];
   public apiCheckers?: ApiChecker[];
+  public serviceKey?: string;
   
   public changeNodeAddress: (node:string | null) => void = () => {}
 
   constructor(
+    serviceKey: string,
     apiCheckers: ApiChecker[],
     defaultProviders: string[],
     healthChecker: HealthChecker,
@@ -51,6 +53,7 @@ class HealthCheckerService extends EventTarget {
     changeNodeAddress: (node: string | null) => void,
   ) {
     super();
+    this.serviceKey = serviceKey;
     this.healthChecker = healthChecker;
     this.apiCheckers = apiCheckers;
     this.nodeAddress = nodeAddress;
@@ -71,7 +74,7 @@ class HealthCheckerService extends EventTarget {
 
   readLocalProvidersFromLocalStorage = () => {
     try {
-      const readValue = window.localStorage.getItem(LOCAL_PROVIDERS);
+      const readValue = window.localStorage.getItem(`${LOCAL_PROVIDERS}-${this.serviceKey}`);
       if (readValue) { 
         this.providers = JSON.parse(readValue);
       } else {
@@ -84,7 +87,7 @@ class HealthCheckerService extends EventTarget {
 
   readFallbacksFromLocalStorage = () => {
     try {
-      const readValue = window.localStorage.getItem(FALLBACKS);
+      const readValue = window.localStorage.getItem(`${FALLBACKS}-${this.serviceKey}`);
       if (readValue) { 
         this.fallbacks = JSON.parse(readValue);
       } 
@@ -96,10 +99,10 @@ class HealthCheckerService extends EventTarget {
   writeLocalProvidersToLocalStorage = async (localProviders: string[]) => {
     try {
       if (localProviders && localProviders.length > 0) {
-        await window.localStorage.setItem(LOCAL_PROVIDERS, JSON.stringify(localProviders));
+        await window.localStorage.setItem(`${LOCAL_PROVIDERS}-${this.serviceKey}`, JSON.stringify(localProviders));
         this.providers = localProviders;
       } else {
-        await window.localStorage.removeItem(LOCAL_PROVIDERS);
+        await window.localStorage.removeItem(`${LOCAL_PROVIDERS}-${this.serviceKey}`);
         this.providers = undefined;
       }
     } catch (error) {
@@ -110,10 +113,10 @@ class HealthCheckerService extends EventTarget {
   writeFallbacksToLocalStorage = async (fallbacks: string[]) => {
     try {
       if (fallbacks && fallbacks.length > 0) {
-        await window.localStorage.setItem(FALLBACKS, JSON.stringify(fallbacks));
+        await window.localStorage.setItem(`${FALLBACKS}-${this.serviceKey}`, JSON.stringify(fallbacks));
         this.fallbacks = fallbacks;
       } else {
-        await window.localStorage.removeItem(FALLBACKS);
+        await window.localStorage.removeItem(`${FALLBACKS}-${this.serviceKey}`);
         this.fallbacks = undefined;
       }
     } catch (error) {
@@ -126,7 +129,7 @@ class HealthCheckerService extends EventTarget {
   handleChangeOfNode = (nodeAddress: string | null) => {
     this.removeFallback(nodeAddress || "");
     this.changeNodeAddress(nodeAddress);
-    this.emit("stateChange", this.getComponentData());
+    this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
   markValidationError = (endpointId: number, providerName: string, error: WaxHealthCheckerValidatorFailedError<string>) => {
@@ -142,7 +145,7 @@ class HealthCheckerService extends EventTarget {
       const prevoiusFailedChecks = [...this.failedChecksByProvider.get(providerName) || [], checkObject];
       const newFailedChecks = structuredClone(this.failedChecksByProvider).set(providerName, prevoiusFailedChecks);
       this.failedChecksByProvider = newFailedChecks;
-      this.emit("stateChange", this.getComponentData());
+      this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
     }
   } 
 
@@ -150,14 +153,14 @@ class HealthCheckerService extends EventTarget {
     const failedChecks = [...this.failedChecksByProvider.get(providerName) || []].filter((failedCheck) => failedCheck.checkName !== checkName);
     const newFailedChecks = structuredClone(this.failedChecksByProvider).set(providerName, failedChecks);
     this.failedChecksByProvider = newFailedChecks;
-    this.emit("stateChange", this.getComponentData());
+    this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
   updateAppAfterScoredEndpointsChange = (data: Array<TScoredEndpoint>) => {
     console.log(JSON.stringify(data)); 
     this.checkForFallbacks(data); 
     if (data.length)this.scoredEndpoints = data;
-    this.emit("stateChange", this.getComponentData());
+    this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
   createHealthChecker = async () => {
@@ -202,7 +205,7 @@ class HealthCheckerService extends EventTarget {
         this.writeLocalProvidersToLocalStorage([...(this.providers || []), provider]);
         this.providers = [...(this.providers || []), provider];
         this.scoredEndpoints = [...this.scoredEndpoints || [], {endpointUrl: provider, score: -1, up: true, latencies: []}]
-        this.emit("stateChange", this.getComponentData());
+        this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
       }
     }
   }
@@ -217,7 +220,7 @@ class HealthCheckerService extends EventTarget {
     this.writeLocalProvidersToLocalStorage(newLocalProviders);
     this.providers = newLocalProviders;
     this.removeFallback(provider);
-    this.emit("stateChange", this.getComponentData());
+    this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
   resetProviders = () => {
@@ -225,21 +228,21 @@ class HealthCheckerService extends EventTarget {
     this.scoredEndpoints = [];
     this.healthChecker?.unregisterAll();
     this.registerCalls();
-    this.emit("stateChange", this.getComponentData());
+    this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
   registerFallback = (provider: string) => {
     if (!this.fallbacks?.includes(provider)) {
       this.fallbacks = [...this.fallbacks || [], provider];
       this.writeFallbacksToLocalStorage(this.fallbacks);
-      this.emit("stateChange", this.getComponentData());
+      this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
     }
   }
 
   removeFallback = (provider: string) => {
     this.fallbacks = this.fallbacks?.filter((fallback) => fallback !== provider) || [];
     this.writeFallbacksToLocalStorage(this.fallbacks);
-    this.emit("stateChange", this.getComponentData());
+    this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
   getComponentData = (): HealthCheckerFields | undefined => {

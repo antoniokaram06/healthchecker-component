@@ -29,7 +29,8 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
     clearValidationError,
     handleChangeOfNode,
     registerFallback,
-    removeFallback
+    removeFallback,
+    serviceKey,
   } = healthCheckerService
 
   const [apiCheckers, setApiCheckers] = useState<ApiChecker[] | undefined>(undefined);
@@ -69,10 +70,10 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
   }
 
   useEffect(() => {
-    healthCheckerService.addEventListener("stateChange", () => {actualizeData()});
+    healthCheckerService.addEventListener(`stateChange-${serviceKey}`, () => {actualizeData()});
     actualizeData();
     return () => {
-      healthCheckerService.removeEventListener("stateChange", () => {actualizeData()});
+      healthCheckerService.removeEventListener(`stateChange-${serviceKey}`, () => {actualizeData()});
     };
   }, [])
   
