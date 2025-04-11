@@ -1,12 +1,12 @@
 import { cn } from "./utils.ts";
 import { TScoredEndpoint } from "@hiveio/wax/vite";
 import { useEffect, useState } from "react";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "./shad/button";
 import { Card } from "./shad/card";
 import { Badge } from "./shad/badge";
 import ProviderCard from "./ProviderCard";
-import ProviderAdditionDialog from "./ProviderAdditionDialog";
+import ProviderAdditionDialog from "./ProviderAddition.tsx";
 import ValidationErrorDialog from "./ValidationErrorDialog";
 import { ValidationErrorDetails, ApiChecker } from "./index.ts"; 
 import { HealthCheckerService } from "./index.ts";
@@ -40,13 +40,11 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
   const [providers, setProviders] = useState<string[] | undefined>(undefined);
   const [failedChecksByProvider, setFailedChecksByProvider] = useState<Map<string, ValidationErrorDetails[]>>(new Map());
 
-  const [isProviderAdditionDialogOpened, setIsProviderAdditionDialogOpened] = useState<boolean>(false);
   const [isValidationErrorDialogOpened, setIsValidationErrorDialogOpened] = useState<boolean>(false);
   const [selectedValidator, setSelectedValidator] = useState<ValidationErrorDetails | undefined>(undefined);
   
   const handleAdditionOfProvider = (provider: string) => {
     addProvider(provider);
-    setIsProviderAdditionDialogOpened(false);
   }
 
   const selectValidator = (providerName: string, checkTitle: string) => {
@@ -137,10 +135,7 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
         <Button className="row-start-4 lg:row-start-2 row-span-1 col-span-full lg:col-span-1 lg:col-end-5" onClick={() => {resetProviders()}}>Restore default API server set</Button>
       </Card>
       {renderProviders()}
-      <Button onClick={() => {setIsProviderAdditionDialogOpened(true)}} className="w-full hover:bg-primary"><Plus /></Button>
       <ProviderAdditionDialog 
-        isOpened={isProviderAdditionDialogOpened}
-        onDialogOpenChange={setIsProviderAdditionDialogOpened}
         onProviderSubmit={handleAdditionOfProvider}
       />
       <ValidationErrorDialog 
