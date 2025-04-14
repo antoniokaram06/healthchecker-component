@@ -46,13 +46,15 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
     selectValidator(providerLink, checkerName);
   }
 
+  if (isTop && index === 1) return null;
+
   return (
-    <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2 mx-2 lg:mx-0", {"outline outline-2 outline-offset-2 mb-6": isTop})}>
+    <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2 mx-2 lg:mx-0", {"outline outline-2 outline-offset-2 mb-6 border-green-600": isTop})}>
       <div className="lg:col-start-1 lg:col-span-1 lg:row-start-1 lg:row-span-full justify-self-center self-center">{index}</div>
-      <div className={cn("row-start-1 col-start-2 col-span-6 self-center", {"text-red-600": disabled})}>
+      <div className={cn("row-start-1 col-start-2 col-span-5 self-center", {"text-red-600": disabled})}>
         {providerLink} {isFallback ? <span className="text-amber-600">- fallback</span>  : null}
       </div>
-      <div className="row-start-2 lg:row-start-1 col-start-1 lg:col-start-8 col-span-full lg:col-span-2 self-center">
+      <div className="row-start-2 lg:row-start-1 col-start-1 lg:col-start-7 col-span-full lg:col-span-2 self-center">
         {score !== -1 ?
           <>{score !==0 && <>Latency: {latency}, Score: {score.toFixed(3)} </>}</> :
           <Loader2 className="animate-spin h-6 w-6 ..." /> 
@@ -60,7 +62,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
       </div> 
       {!isSelected ? 
         <>
-          <Button className="row-start-1 col-start-10 col-span-1 hover:bg-slate-400 bg-transparent rounded place-self-end w-fit" onClick={() => {deleteProvider(providerLink)}}>
+          <Button className="row-start-1 col-start-10 col-span-1 hover:bg-slate-400 bg-transparent rounded place-self-end w-fit self-start" onClick={() => {deleteProvider(providerLink)}}>
             <X />
           </Button>
           <div className="row-start-5 lg:row-start-2 col-start-1 lg:col-start-8 col-span-10 lg:col-span-3 flex justify-end ml-2">
