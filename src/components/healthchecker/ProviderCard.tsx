@@ -54,7 +54,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
       <div className={cn("row-start-1 col-start-2 col-span-5 self-center", {"text-red-600": disabled})}>
         {providerLink} {isFallback ? <span className="text-amber-600">- fallback</span>  : null}
       </div>
-      <div className="row-start-2 lg:row-start-1 col-start-1 lg:col-start-7 col-span-full lg:col-span-2 self-center">
+      <div className="row-start-2 lg:row-start-1 col-start-1 lg:col-start-7 col-span-full lg:col-span-3 self-center">
         {score !== -1 ?
           <>{score !==0 && <>Latency: {latency}, Score: {score.toFixed(3)} </>}</> :
           <Loader2 className="animate-spin h-6 w-6 ..." /> 
