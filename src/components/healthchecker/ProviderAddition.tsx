@@ -12,6 +12,11 @@ const ProviderAddition: React.FC<ProviderAdditionProps> = ({
 
   const [providerValue, setProviderValue] = useState<string>("");
 
+  const onSubmit = (providerValue: string) => {
+    onProviderSubmit(providerValue);
+    setProviderValue("");
+  }
+
 
   return (
     <div className="flex flex-col justify left">
@@ -27,7 +32,7 @@ const ProviderAddition: React.FC<ProviderAdditionProps> = ({
           data-testid="api-address-input"
           onChange={(e) => setProviderValue(e.target.value)}
         />
-        <Button onClick={() => {onProviderSubmit(providerValue)}}>Add</Button>
+        <Button disabled={providerValue === ""} onClick={() => {onSubmit(providerValue)}}>Add</Button>
       </div>
     </div>
 
