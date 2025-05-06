@@ -32,6 +32,7 @@ class HealthCheckerService extends EventTarget {
   private defaultProviders?: string[];
   private healthChecker?: HealthChecker;
   private endpointTitleById: Map<number, string> = new Map();
+  private enableLogs?: boolean;
   
   
   public scoredEndpoints?: TScoredEndpoint[];
@@ -49,8 +50,9 @@ class HealthCheckerService extends EventTarget {
     apiCheckers: ApiChecker[],
     defaultProviders: string[],
     healthChecker: HealthChecker,
-    nodeAddress: string | null, // Remember to ge this inside service
+    nodeAddress: string | null,
     changeNodeAddress: (node: string | null) => void,
+    enableLogs?: boolean,
   ) {
     super();
     this.serviceKey = serviceKey;
@@ -63,6 +65,7 @@ class HealthCheckerService extends EventTarget {
     this.changeNodeAddress = changeNodeAddress;
     this.createHealthChecker();
     this.initializeDefaultChecks();
+    this.enableLogs = enableLogs;
   }
 
   emit(eventName: string, detail?: any) {
@@ -157,14 +160,14 @@ class HealthCheckerService extends EventTarget {
   }
 
   updateAppAfterScoredEndpointsChange = (data: Array<TScoredEndpoint>) => {
-    console.log(JSON.stringify(data)); 
+    if (this.enableLogs) console.log(JSON.stringify(data)); 
     this.checkForFallbacks(data); 
     if (data.length)this.scoredEndpoints = data;
     this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
   createHealthChecker = async () => {
-    this.healthChecker?.on('error', error => console.error(error.message));
+    this.healthChecker?.on('error', error => {if(this.enableLogs) console.error(error.message)});
     this.healthChecker?.on("data", this.updateAppAfterScoredEndpointsChange);
     this.healthChecker?.on("validationerror", error => this.markValidationError(error.apiEndpoint.id, error.request.endpoint, error));
   }
