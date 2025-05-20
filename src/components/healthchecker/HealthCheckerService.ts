@@ -42,9 +42,21 @@ class HealthCheckerService extends EventTarget {
   public providers?: string[];
   public apiCheckers?: ApiChecker[];
   public serviceKey?: string;
+  public isActive?: boolean;
   
   public changeNodeAddress: (node:string | null) => void = () => {}
 
+  /**
+   * 
+   * @param serviceKey 
+   * @param apiCheckers 
+   * @param defaultProviders 
+   * @param healthChecker 
+   * @param nodeAddress 
+   * @param changeNodeAddress 
+   * @param enableLogs 
+   * Initialize necessery part of HC process. Set providers, chekers and addresses. Don't start checks yet.
+   */
   constructor(
     serviceKey: string,
     apiCheckers: ApiChecker[],
@@ -60,11 +72,11 @@ class HealthCheckerService extends EventTarget {
     this.apiCheckers = apiCheckers;
     this.nodeAddress = nodeAddress;
     this.defaultProviders = defaultProviders;
+    this.isActive = false;
     this.readFallbacksFromLocalStorage();
     this.readLocalProvidersFromLocalStorage();
     this.changeNodeAddress = changeNodeAddress;
-    this.createHealthChecker();
-    this.initializeDefaultChecks();
+    this.initializeHealthChecker();
     this.enableLogs = enableLogs;
   }
 
@@ -166,10 +178,17 @@ class HealthCheckerService extends EventTarget {
     this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
-  createHealthChecker = async () => {
+  /**
+   * Part of HC necessary initialization. Set event listeners and default endpoints.
+   */
+  initializeHealthChecker = async () => {
     this.healthChecker?.on('error', error => {if(this.enableLogs) console.error(error.message)});
     this.healthChecker?.on("data", this.updateAppAfterScoredEndpointsChange);
     this.healthChecker?.on("validationerror", error => this.markValidationError(error.apiEndpoint.id, error.request.endpoint, error));
+    const initialEndpoints: TScoredEndpoint[] | undefined = this.providers?.map(
+      (customProvider) => ({endpointUrl: customProvider, score: -1, up: true, latencies: []})
+    )
+    if (!!initialEndpoints && !this.scoredEndpoints) this.scoredEndpoints = initialEndpoints;
   }
 
   checkForFallbacks = (scoredEndpoints: TScoredEndpoint[]) => {
@@ -186,17 +205,27 @@ class HealthCheckerService extends EventTarget {
     const registeredEndpoints = new Map<number, string>();
     if (this.apiCheckers)
     for (const checker of this.apiCheckers) {
-      const testHC = await this.healthChecker?.register(checker!.method, checker!.params, checker!.validatorFunction, this.providers);
-      if (testHC)
-      registeredEndpoints.set(testHC.id, checker.title);
+      const healthCheckerEndpoint = await this.healthChecker?.register(checker!.method, checker!.params, checker!.validatorFunction, this.providers);
+      if (healthCheckerEndpoint)
+      registeredEndpoints.set(healthCheckerEndpoint.id, checker.title);
     }
     this.endpointTitleById = registeredEndpoints;
   }
 
-  initializeDefaultChecks = async () => {
-    const initialEndpoints: TScoredEndpoint[] | undefined = this.providers?.map((customProvider) => ({endpointUrl: customProvider, score: -1, up: true, latencies: []}))
-    if (!!initialEndpoints && !this.scoredEndpoints) this.scoredEndpoints = initialEndpoints;
+  /**
+   * Trigger automatic checks.
+   */
+  startCheckingProcess = async () => {
+    this.isActive = true;
     this.registerCalls();
+  }
+
+  /**
+   * Stop automatic checks.
+   */
+  stopCheckingProcess = async () => {
+    this.healthChecker?.unregisterAll();
+    this.isActive = false;
   }
 
   addProvider = (provider: string) => {
