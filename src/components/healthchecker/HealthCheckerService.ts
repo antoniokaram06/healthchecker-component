@@ -22,6 +22,7 @@ export interface HealthCheckerFields {
   nodeAddress: string | null;
   fallbacks?: string[];
   providers?: string[];
+  isActive?: boolean;
 }
 
 const LOCAL_PROVIDERS = "localProviders";
@@ -216,8 +217,9 @@ class HealthCheckerService extends EventTarget {
    * Trigger automatic checks.
    */
   startCheckingProcess = async () => {
-    this.isActive = true;
     this.registerCalls();
+    this.isActive = true;
+    this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
   /**
@@ -226,6 +228,7 @@ class HealthCheckerService extends EventTarget {
   stopCheckingProcess = async () => {
     this.healthChecker?.unregisterAll();
     this.isActive = false;
+    this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
   addProvider = (provider: string) => {
@@ -286,6 +289,7 @@ class HealthCheckerService extends EventTarget {
       fallbacks: this.fallbacks,
       nodeAddress: this.nodeAddress,
       providers: this.providers,
+      isActive: this.isActive,
     }
   }
 

@@ -3,13 +3,12 @@ import { TScoredEndpoint } from "@hiveio/wax/vite";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "./shad/button";
-import { Card } from "./shad/card";
-import { Badge } from "./shad/badge";
 import ProviderCard from "./ProviderCard";
 import ProviderAdditionDialog from "./ProviderAddition.tsx";
 import ValidationErrorDialog from "./ValidationErrorDialog";
 import { ValidationErrorDetails, ApiChecker } from "./index.ts"; 
 import { HealthCheckerService } from "./index.ts";
+import { Toggle } from "./shad/toggle.tsx";
 
 
 interface HealthCheckerComponentProps {
@@ -30,6 +29,8 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
     handleChangeOfNode,
     registerFallback,
     removeFallback,
+    startCheckingProcess,
+    stopCheckingProcess,
     serviceKey,
   } = healthCheckerService
 
@@ -39,6 +40,7 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
   const [nodeAddress, setNodeAddress] = useState<string | null>(null);
   const [providers, setProviders] = useState<string[] | undefined>(undefined);
   const [failedChecksByProvider, setFailedChecksByProvider] = useState<Map<string, ValidationErrorDetails[]>>(new Map());
+  const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
 
   const [isValidationErrorDialogOpened, setIsValidationErrorDialogOpened] = useState<boolean>(false);
   const [selectedValidator, setSelectedValidator] = useState<ValidationErrorDetails | undefined>(undefined);
@@ -64,6 +66,16 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
       setProviders(hcData?.providers)
       setFailedChecksByProvider(hcData.failedChecksByProvider)
       setNodeAddress(hcData?.nodeAddress);
+      setIsActive(hcData?.isActive)
+    }
+  }
+
+  const changeActivity = () => {
+    console.log("CHANGE", isActive);
+    if (isActive) {
+      stopCheckingProcess()
+    } else {
+      startCheckingProcess()
     }
   }
 
@@ -101,7 +113,8 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
         registerFallback={registerFallback}
         removeFallback={removeFallback}    
         failedChecks={failedChecksByProvider.get(endpointUrl)?.map((failedCheck) => failedCheck.checkName) || []}
-        selectValidator={selectValidator}                                                                               
+        selectValidator={selectValidator}   
+        isHealthCheckerActive={!!isActive}                                                                            
       />
     )       
   }
@@ -122,22 +135,22 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
 
   return (
     <div className={cn(className)}>
-      <Card className="grid grid-cols-4 grid-rows-4 lg:grid-rows-2 gap-y-1 my-1 p-2 mb-4">
-        <div className="row-start-1 col-start-1 col-span-4 flex justify-center">Healthchecker for API servers</div>
-        <div className="col-start-1 row-start-2 row-span-2 col-span-3">
-          <div>Api checks:</div>
-          <div className="flex flex-wrap">
-            {apiCheckers?.map((apiChecker, index) => (
-              <Badge key={index} variant={"outline"}>{apiChecker.title}</Badge>
-            ))}
-          </div>
-        </div>
-        <Button className="row-start-4 lg:row-start-2 row-span-1 col-span-full lg:col-span-1 lg:col-end-5" onClick={() => {resetProviders()}}>Restore default API server set</Button>
-      </Card>
+      <h2 className="text-xl text-center">Healthchecker for API servers</h2>
+      <div className="flex items-center space-x-2 justify-self-center my-2" >
+        <Toggle
+          checked={!!isActive}
+          onClick={changeActivity}
+          className="text-base"
+          leftLabel="Proceed health checking of APIs"
+        />
+      </div>
       {renderProviders()}
       <ProviderAdditionDialog 
         onProviderSubmit={handleAdditionOfProvider}
       />
+      <Button variant="outline" className="mt-2" onClick={() => {resetProviders()}}>
+        Restore default API server set
+      </Button>
       <ValidationErrorDialog 
         isOpened={isValidationErrorDialogOpened}
         onDialogOpenChange={setIsValidationErrorDialogOpened}

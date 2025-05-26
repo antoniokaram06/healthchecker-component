@@ -16,6 +16,7 @@ interface ProviderCardProps {
   isFallback: boolean;
   index: number;
   failedChecks: string[];
+  isHealthCheckerActive: boolean;
   switchToProvider: (providerLink: string | null) => void;
   deleteProvider: (provider: string) => void;
   registerFallback: (provider: string) => void;
@@ -34,6 +35,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
   isFallback,
   index,
   failedChecks,
+  isHealthCheckerActive,
   deleteProvider,
   switchToProvider,
   registerFallback,
@@ -49,17 +51,20 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
   if (isTop && index === 1) return null;
 
   return (
-    <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2 mx-2 lg:mx-0", {"outline outline-2 outline-offset-2 mb-6": isTop, "border-green-600": isSelected})}>
+    <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2", {"outline outline-2 outline-offset-2 mb-6": isTop, "border-green-600": isSelected})}>
       <div className="lg:col-start-1 lg:col-span-1 lg:row-start-1 lg:row-span-full justify-self-center self-center">{index}</div>
       <div className={cn("row-start-1 col-start-2 col-span-5 self-center", {"text-red-600": disabled})}>
         {providerLink} {isFallback ? <span className="text-amber-600">- fallback</span>  : null}
       </div>
-      <div className="row-start-2 lg:row-start-1 col-start-1 lg:col-start-7 col-span-full lg:col-span-3 self-center">
-        {score !== -1 ?
-          <>{score !==0 && <>Latency: {latency}, Score: {score.toFixed(3)} </>}</> :
-          <Loader2 className="animate-spin h-6 w-6 ..." /> 
-        }
-      </div> 
+      {
+        isHealthCheckerActive && 
+        <div className="row-start-2 lg:row-start-1 col-start-1 lg:col-start-7 col-span-full lg:col-span-3 self-center">
+          {score !== -1 ?
+            <>{score !==0 && <>Latency: {latency}, Score: {score.toFixed(3)} </>}</> :
+            <Loader2 className="animate-spin h-6 w-6 ..." /> 
+          }
+        </div> 
+      }
       {!isSelected ? 
         <>
           <Button className="row-start-1 col-start-10 col-span-1 hover:bg-slate-400 bg-transparent rounded place-self-end w-fit self-start" onClick={() => {deleteProvider(providerLink)}}>
