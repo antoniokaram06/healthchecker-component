@@ -23,6 +23,7 @@ export interface HealthCheckerFields {
   fallbacks?: string[];
   providers?: string[];
   isActive?: boolean;
+  waitingForSwitch?: boolean;
 }
 
 const LOCAL_PROVIDERS = "localProviders";
@@ -44,6 +45,7 @@ class HealthCheckerService extends EventTarget {
   public apiCheckers?: ApiChecker[];
   public serviceKey?: string;
   public isActive?: boolean;
+  public waitingForSwitch?: boolean = false;
   
   public changeNodeAddress: (node:string | null) => void = () => {}
 
@@ -176,6 +178,9 @@ class HealthCheckerService extends EventTarget {
     if (this.enableLogs) console.log(JSON.stringify(data)); 
     this.checkForFallbacks(data); 
     if (data.length)this.scoredEndpoints = data;
+    if (this.waitingForSwitch) {
+      this.switchToBestProvider();
+    }
     this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
@@ -190,6 +195,25 @@ class HealthCheckerService extends EventTarget {
       (customProvider) => ({endpointUrl: customProvider, score: -1, up: true, latencies: []})
     )
     if (!!initialEndpoints && !this.scoredEndpoints) this.scoredEndpoints = initialEndpoints;
+  }
+
+  evaluateAndSwitch = () => {
+    if (this.isActive && this.scoredEndpoints?.[0]?.up) {
+      this.switchToBestProvider()
+    } else {
+      this.waitingForSwitch = true;
+      this.registerCalls();
+      this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
+    }
+  }
+
+  switchToBestProvider = () => {
+    const bestProvider = this.scoredEndpoints?.[0]
+    if (bestProvider?.up && bestProvider?.endpointUrl) {
+      if (this.nodeAddress !== bestProvider.endpointUrl) this.handleChangeOfNode(bestProvider.endpointUrl);
+      this.waitingForSwitch = false;
+      this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
+    } 
   }
 
   checkForFallbacks = (scoredEndpoints: TScoredEndpoint[]) => {
@@ -290,6 +314,7 @@ class HealthCheckerService extends EventTarget {
       nodeAddress: this.nodeAddress,
       providers: this.providers,
       isActive: this.isActive,
+      waitingForSwitch: this.waitingForSwitch,
     }
   }
 

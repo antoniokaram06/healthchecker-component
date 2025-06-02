@@ -31,6 +31,7 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
     removeFallback,
     startCheckingProcess,
     stopCheckingProcess,
+    evaluateAndSwitch,
     serviceKey,
   } = healthCheckerService
 
@@ -41,6 +42,7 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
   const [providers, setProviders] = useState<string[] | undefined>(undefined);
   const [failedChecksByProvider, setFailedChecksByProvider] = useState<Map<string, ValidationErrorDetails[]>>(new Map());
   const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
+  const [waitingForSwitch, setWaitingForSwitch] = useState<boolean | undefined>(undefined);
 
   const [isValidationErrorDialogOpened, setIsValidationErrorDialogOpened] = useState<boolean>(false);
   const [selectedValidator, setSelectedValidator] = useState<ValidationErrorDetails | undefined>(undefined);
@@ -67,11 +69,11 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
       setFailedChecksByProvider(hcData.failedChecksByProvider)
       setNodeAddress(hcData?.nodeAddress);
       setIsActive(hcData?.isActive)
+      setWaitingForSwitch(hcData?.waitingForSwitch)
     }
   }
 
   const changeActivity = () => {
-    console.log("CHANGE", isActive);
     if (isActive) {
       stopCheckingProcess()
     } else {
@@ -141,8 +143,13 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
           checked={!!isActive}
           onClick={changeActivity}
           className="text-base"
-          leftLabel="Proceed health checking of APIs"
+          leftLabel="Continuous health checking of APIs"
         />
+      </div>
+      <div className="flex items-center space-x-2 justify-self-center my-2" >
+        <Button variant="outline" className="mt-2" onClick={() => {evaluateAndSwitch()}}>
+          Switch to the best {waitingForSwitch && <Loader2 className="animate-spin h-6 w-6 ..." /> }
+        </Button>
       </div>
       {renderProviders()}
       <ProviderAdditionDialog 
