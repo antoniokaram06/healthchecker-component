@@ -139,19 +139,19 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
   const renderSwitchStatus = () => {
     if (!switchStatus) 
       return (
-        <span>Switch to the best</span>
+        <>Switch to the best</>
       );
     if (switchStatus === "waiting")
       return (
-        <span>Evaluating {switchStatus === "waiting" && <Loader2 className="animate-spin h-6 w-6 ..." /> }</span>
+        <>Evaluating {switchStatus === "waiting" && <Loader2 className="animate-spin h-6 w-6 ..." /> }</>
       );
     if (switchStatus === "done")
       return (
-        <span>Endpoint found, switching</span>
+        <>Endpoint found, switching</>
       );
     if (switchStatus === "no_change")
       return (
-        <span>Already on the best provider</span>
+        <>Already on the best provider</>
       );
   }
 
