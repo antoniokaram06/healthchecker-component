@@ -23,7 +23,7 @@ export interface HealthCheckerFields {
   fallbacks?: string[];
   providers?: string[];
   isActive?: boolean;
-  waitingForSwitch?: boolean;
+  switchStatus?: "waiting" | "done" | "no_change";
 }
 
 const LOCAL_PROVIDERS = "localProviders";
@@ -45,7 +45,7 @@ class HealthCheckerService extends EventTarget {
   public apiCheckers?: ApiChecker[];
   public serviceKey?: string;
   public isActive?: boolean;
-  public waitingForSwitch?: boolean = false;
+  public switchStatus?:  "waiting" | "done" | "no_change" = undefined;
   
   public changeNodeAddress: (node:string | null) => void = () => {}
 
@@ -178,7 +178,7 @@ class HealthCheckerService extends EventTarget {
     if (this.enableLogs) console.log(JSON.stringify(data)); 
     this.checkForFallbacks(data); 
     if (data.length)this.scoredEndpoints = data;
-    if (this.waitingForSwitch) {
+    if (this.switchStatus) {
       this.switchToBestProvider();
     }
     this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
@@ -201,7 +201,7 @@ class HealthCheckerService extends EventTarget {
     if (this.isActive && this.scoredEndpoints?.[0]?.up) {
       this.switchToBestProvider()
     } else {
-      this.waitingForSwitch = true;
+      this.switchStatus = "waiting";
       this.registerCalls();
       this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
     }
@@ -210,9 +210,20 @@ class HealthCheckerService extends EventTarget {
   switchToBestProvider = () => {
     const bestProvider = this.scoredEndpoints?.[0]
     if (bestProvider?.up && bestProvider?.endpointUrl) {
-      if (this.nodeAddress !== bestProvider.endpointUrl) this.handleChangeOfNode(bestProvider.endpointUrl);
-      this.waitingForSwitch = false;
+      if (this.nodeAddress !== bestProvider.endpointUrl) {
+        this.handleChangeOfNode(bestProvider.endpointUrl);
+        this.switchStatus = "done";
+      setTimeout(() => {
+        this.switchStatus = undefined;
+        this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
+      }, 5000);
+      } 
+      this.switchStatus = "no_change";
       this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
+      setTimeout(() => {
+        this.switchStatus = undefined;
+        this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
+      }, 5000);
     } 
   }
 
@@ -314,7 +325,7 @@ class HealthCheckerService extends EventTarget {
       nodeAddress: this.nodeAddress,
       providers: this.providers,
       isActive: this.isActive,
-      waitingForSwitch: this.waitingForSwitch,
+      switchStatus: this.switchStatus,
     }
   }
 

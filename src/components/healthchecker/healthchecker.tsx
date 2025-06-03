@@ -42,7 +42,7 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
   const [providers, setProviders] = useState<string[] | undefined>(undefined);
   const [failedChecksByProvider, setFailedChecksByProvider] = useState<Map<string, ValidationErrorDetails[]>>(new Map());
   const [isActive, setIsActive] = useState<boolean | undefined>(undefined);
-  const [waitingForSwitch, setWaitingForSwitch] = useState<boolean | undefined>(undefined);
+  const [switchStatus, setSwitchStatus] = useState<"waiting" | "done" | "no_change" | undefined>(undefined);
 
   const [isValidationErrorDialogOpened, setIsValidationErrorDialogOpened] = useState<boolean>(false);
   const [selectedValidator, setSelectedValidator] = useState<ValidationErrorDetails | undefined>(undefined);
@@ -69,7 +69,7 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
       setFailedChecksByProvider(hcData.failedChecksByProvider)
       setNodeAddress(hcData?.nodeAddress);
       setIsActive(hcData?.isActive)
-      setWaitingForSwitch(hcData?.waitingForSwitch)
+      setSwitchStatus(hcData?.switchStatus)
     }
   }
 
@@ -88,6 +88,7 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
       healthCheckerService.removeEventListener(`stateChange-${serviceKey}`, () => {actualizeData()});
     };
   }, [])
+
   
   const renderProvider = (scoredEndpoint: TScoredEndpoint, index: number, isTop?: boolean) => {
     const {endpointUrl, score, up,} = scoredEndpoint;
@@ -135,6 +136,25 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
     )
   }
 
+  const renderSwitchStatus = () => {
+    if (!switchStatus) 
+      return (
+        <span>Switch to the best</span>
+      );
+    if (switchStatus === "waiting")
+      return (
+        <span>Evaluating {switchStatus === "waiting" && <Loader2 className="animate-spin h-6 w-6 ..." /> }</span>
+      );
+    if (switchStatus === "done")
+      return (
+        <span>Endpoint found, switching</span>
+      );
+    if (switchStatus === "no_change")
+      return (
+        <span>Already on the best provider</span>
+      );
+  }
+
   return (
     <div className={cn(className)}>
       <h2 className="text-xl text-center">Healthchecker for API servers</h2>
@@ -148,7 +168,7 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
       </div>
       <div className="flex items-center space-x-2 justify-self-center my-2" >
         <Button variant="outline" className="mt-2" onClick={() => {evaluateAndSwitch()}}>
-          Switch to the best {waitingForSwitch && <Loader2 className="animate-spin h-6 w-6 ..." /> }
+          {renderSwitchStatus()}
         </Button>
       </div>
       {renderProviders()}
