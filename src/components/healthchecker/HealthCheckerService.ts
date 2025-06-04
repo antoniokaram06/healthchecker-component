@@ -20,14 +20,12 @@ export interface HealthCheckerFields {
   scoredEndpoints: TScoredEndpoint[] | undefined;
   failedChecksByProvider: Map<string, ValidationErrorDetails[]>;
   nodeAddress: string | null;
-  fallbacks?: string[];
   providers?: string[];
   isActive?: boolean;
   switchStatus?: "waiting" | "done" | "no_change";
 }
 
 const LOCAL_PROVIDERS = "localProviders";
-const FALLBACKS = "fallbacks";
 
 class HealthCheckerService extends EventTarget {
 
@@ -40,7 +38,6 @@ class HealthCheckerService extends EventTarget {
   public scoredEndpoints?: TScoredEndpoint[];
   public failedChecksByProvider: Map<string, ValidationErrorDetails[]> = new Map();
   public nodeAddress: string | null = null;
-  public fallbacks?: string[];
   public providers?: string[];
   public apiCheckers?: ApiChecker[];
   public serviceKey?: string;
@@ -76,7 +73,6 @@ class HealthCheckerService extends EventTarget {
     this.nodeAddress = nodeAddress;
     this.defaultProviders = defaultProviders;
     this.isActive = false;
-    this.readFallbacksFromLocalStorage();
     this.readLocalProvidersFromLocalStorage();
     this.changeNodeAddress = changeNodeAddress;
     this.initializeHealthChecker();
@@ -103,17 +99,6 @@ class HealthCheckerService extends EventTarget {
     }
   }
 
-  readFallbacksFromLocalStorage = () => {
-    try {
-      const readValue = window.localStorage.getItem(`${FALLBACKS}-${this.serviceKey}`);
-      if (readValue) { 
-        this.fallbacks = JSON.parse(readValue);
-      } 
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   writeLocalProvidersToLocalStorage = async (localProviders: string[]) => {
     try {
       if (localProviders && localProviders.length > 0) {
@@ -128,24 +113,9 @@ class HealthCheckerService extends EventTarget {
     }
   }
 
-  writeFallbacksToLocalStorage = async (fallbacks: string[]) => {
-    try {
-      if (fallbacks && fallbacks.length > 0) {
-        await window.localStorage.setItem(`${FALLBACKS}-${this.serviceKey}`, JSON.stringify(fallbacks));
-        this.fallbacks = fallbacks;
-      } else {
-        await window.localStorage.removeItem(`${FALLBACKS}-${this.serviceKey}`);
-        this.fallbacks = undefined;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   // HC Logic
 
   handleChangeOfNode = (nodeAddress: string | null) => {
-    this.removeFallback(nodeAddress || "");
     this.changeNodeAddress(nodeAddress);
     this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
@@ -176,7 +146,6 @@ class HealthCheckerService extends EventTarget {
 
   updateAppAfterScoredEndpointsChange = (data: Array<TScoredEndpoint>) => {
     if (this.enableLogs) console.log(JSON.stringify(data)); 
-    this.checkForFallbacks(data); 
     if (data.length)this.scoredEndpoints = data;
     if (this.switchStatus) {
       this.switchToBestProvider();
@@ -227,15 +196,6 @@ class HealthCheckerService extends EventTarget {
     } 
   }
 
-  checkForFallbacks = (scoredEndpoints: TScoredEndpoint[]) => {
-    const currentScoredEndpoint = scoredEndpoints.find((scoredEdnpoint) => scoredEdnpoint.endpointUrl === this.nodeAddress);
-    if (currentScoredEndpoint && !currentScoredEndpoint.up) {
-      this.fallbacks?.forEach((fallback) => {
-        const fallbackScoredEndpoint = scoredEndpoints.find((scoredEdnpoint) => scoredEdnpoint.endpointUrl === fallback);
-        if (fallbackScoredEndpoint && fallbackScoredEndpoint.up) this.changeNodeAddress(fallback) ;
-      })
-    }
-  }
 
   registerCalls = async () => {
     const registeredEndpoints = new Map<number, string>();
@@ -289,7 +249,6 @@ class HealthCheckerService extends EventTarget {
     this.scoredEndpoints = this.scoredEndpoints?.filter((endpoint) => endpoint.endpointUrl !== provider);
     this.writeLocalProvidersToLocalStorage(newLocalProviders);
     this.providers = newLocalProviders;
-    this.removeFallback(provider);
     this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
@@ -301,27 +260,12 @@ class HealthCheckerService extends EventTarget {
     this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
-  registerFallback = (provider: string) => {
-    if (!this.fallbacks?.includes(provider)) {
-      this.fallbacks = [...this.fallbacks || [], provider];
-      this.writeFallbacksToLocalStorage(this.fallbacks);
-      this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
-    }
-  }
-
-  removeFallback = (provider: string) => {
-    this.fallbacks = this.fallbacks?.filter((fallback) => fallback !== provider) || [];
-    this.writeFallbacksToLocalStorage(this.fallbacks);
-    this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
-  }
-
   getComponentData = (): HealthCheckerFields | undefined => {
     if (this.apiCheckers && this.scoredEndpoints)
     return {
       apiCheckers: this.apiCheckers,
       scoredEndpoints: this.scoredEndpoints,
       failedChecksByProvider: this.failedChecksByProvider,
-      fallbacks: this.fallbacks,
       nodeAddress: this.nodeAddress,
       providers: this.providers,
       isActive: this.isActive,

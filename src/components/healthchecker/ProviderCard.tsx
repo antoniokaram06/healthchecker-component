@@ -13,14 +13,11 @@ interface ProviderCardProps {
   checkerNamesList: string[];
   latency: number | null;
   score: number;
-  isFallback: boolean;
   index: number;
   failedChecks: string[];
   isHealthCheckerActive: boolean;
   switchToProvider: (providerLink: string | null) => void;
   deleteProvider: (provider: string) => void;
-  registerFallback: (provider: string) => void;
-  removeFallback: (provider: string) => void;
   selectValidator: (providerName: string, checkTitle: string) => void;
 }
 
@@ -32,14 +29,11 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
   checkerNamesList,
   latency,
   score,
-  isFallback,
   index,
   failedChecks,
   isHealthCheckerActive,
   deleteProvider,
   switchToProvider,
-  registerFallback,
-  removeFallback,
   selectValidator
 }) => {
 
@@ -53,9 +47,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
   return (
     <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2", {"outline outline-2 outline-offset-2 mb-6": isTop, "border-green-600": isSelected})}>
       <div className="lg:col-start-1 lg:col-span-1 lg:row-start-1 lg:row-span-full justify-self-center self-center">{index}</div>
-      <div className={cn("row-start-1 col-start-2 col-span-5 self-center", {"text-red-600": disabled})}>
-        {providerLink} {isFallback ? <span className="text-amber-600">- fallback</span>  : null}
-      </div>
+      <div className={cn("row-start-1 col-start-2 col-span-5 self-center", {"text-red-600": disabled})}>{providerLink}</div>
       {
         isHealthCheckerActive && 
         <div className="row-start-2 lg:row-start-1 col-start-1 lg:col-start-7 col-span-full lg:col-span-3 self-center">
@@ -74,15 +66,6 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
             <Button className="hover:bg-slate-400 rounded w-full" onClick={() => {switchToProvider(providerLink)}}>
               Switch to provider
             </Button>
-            {isFallback ?
-              <Button className="hover:bg-slate-400 rounded ml-2 w-full" onClick={() => {removeFallback(providerLink)}}>
-                Remove fallback
-              </Button>
-              :
-              <Button className="hover:bg-slate-400 rounded ml-2 w-full" onClick={() => {registerFallback(providerLink)}}>
-                Set fallback
-              </Button>
-            }
           </div>
         </>
         :

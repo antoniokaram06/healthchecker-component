@@ -27,8 +27,6 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
     resetProviders,
     clearValidationError,
     handleChangeOfNode,
-    registerFallback,
-    removeFallback,
     startCheckingProcess,
     stopCheckingProcess,
     evaluateAndSwitch,
@@ -37,7 +35,6 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
 
   const [apiCheckers, setApiCheckers] = useState<ApiChecker[] | undefined>(undefined);
   const [scoredEndpoints, setScoredEndpoints] = useState<TScoredEndpoint[] | undefined>(undefined);
-  const [fallbacks, setFallbacks] = useState<string[] | undefined>(undefined);
   const [nodeAddress, setNodeAddress] = useState<string | null>(null);
   const [providers, setProviders] = useState<string[] | undefined>(undefined);
   const [failedChecksByProvider, setFailedChecksByProvider] = useState<Map<string, ValidationErrorDetails[]>>(new Map());
@@ -62,7 +59,6 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
   const actualizeData = () => {
     const hcData = healthCheckerService.getComponentData();
     if (hcData) {
-      setFallbacks(hcData?.fallbacks);
       setScoredEndpoints(hcData?.scoredEndpoints);
       setApiCheckers(hcData?.apiCheckers)
       setProviders(hcData?.providers)
@@ -109,12 +105,9 @@ const HealthCheckerComponent: React.FC<HealthCheckerComponentProps> = ({
         latency={lastLatency}
         isSelected={scoredEndpoint.endpointUrl === nodeAddress}
         checkerNamesList={apiCheckers?.map((apicChecker) => apicChecker.title) || []}
-        isFallback={!!fallbacks?.includes(endpointUrl)}
         index={index + 1}
         score={scoredEndpoint.score}
         deleteProvider={removeProvider}
-        registerFallback={registerFallback}
-        removeFallback={removeFallback}    
         failedChecks={failedChecksByProvider.get(endpointUrl)?.map((failedCheck) => failedCheck.checkName) || []}
         selectValidator={selectValidator}   
         isHealthCheckerActive={!!isActive}                                                                            
