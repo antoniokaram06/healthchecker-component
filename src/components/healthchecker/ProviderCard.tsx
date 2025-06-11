@@ -45,7 +45,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
   if (isTop && index === 1) return null;
 
   return (
-    <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2", {"outline outline-2 outline-offset-2 mb-6": isTop, "border-green-600": isSelected})}>
+    <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2 dark:text-white", {"outline outline-2 outline-offset-2 mb-6": isTop, "border-green-600": isSelected})}>
       <div className="lg:col-start-1 lg:col-span-1 lg:row-start-1 lg:row-span-full justify-self-center self-center">{index}</div>
       <div className={cn("row-start-1 col-start-2 col-span-5 self-center", {"text-red-600": disabled})}>{providerLink}</div>
       {
