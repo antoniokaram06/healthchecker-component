@@ -117,6 +117,7 @@ class HealthCheckerService extends EventTarget {
 
   handleChangeOfNode = (nodeAddress: string | null) => {
     this.changeNodeAddress(nodeAddress);
+    this.nodeAddress = nodeAddress;
     this.emit(`stateChange-${this.serviceKey}`, this.getComponentData());
   }
 
