@@ -2,8 +2,7 @@ import { cn } from "./utils.ts";
 import { Button } from "./shad/button";
 import { Card } from "./shad/card";
 import { Badge } from "./shad/badge";
-import { Loader2, X } from 'lucide-react';
-
+import { Loader2, X } from "lucide-react";
 
 interface ProviderCardProps {
   providerLink: string;
@@ -34,59 +33,100 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
   isHealthCheckerActive,
   deleteProvider,
   switchToProvider,
-  selectValidator
+  selectValidator,
 }) => {
-
   const handleBadgeClick = (checkerName: string) => {
     if (failedChecks.includes(checkerName))
-    selectValidator(providerLink, checkerName);
-  }
+      selectValidator(providerLink, checkerName);
+  };
 
   if (isTop && index === 1) return null;
 
   return (
-    <Card className={cn("grid grid-cols-10 grid-rows-5 lg:grid-rows-2 gap-y-1 my-1 p-2 dark:text-white", {"outline outline-2 outline-offset-2 mb-6": isTop, "border-green-600": isSelected})}>
-      <div className="lg:col-start-1 lg:col-span-1 lg:row-start-1 lg:row-span-full justify-self-center self-center">{index}</div>
-      <div className={cn("row-start-1 col-start-2 col-span-5 self-center", {"text-red-600": disabled})}>{providerLink}</div>
-      {
-        isHealthCheckerActive && 
-        <div className="row-start-2 lg:row-start-1 col-start-1 lg:col-start-7 col-span-full lg:col-span-3 self-center">
-          {score !== -1 ?
-            <>{score !==0 && <>Latency: {latency}, Score: {score.toFixed(3)} </>}</> :
-            <Loader2 className="animate-spin h-6 w-6 ..." /> 
-          }
-        </div> 
-      }
-      {!isSelected ? 
-        <>
-          <Button className="row-start-1 col-start-10 col-span-1 hover:bg-slate-400 bg-transparent rounded place-self-end w-fit self-start" onClick={() => {deleteProvider(providerLink)}}>
-            <X className="dark:text-white" />
-          </Button>
-          <div className="row-start-5 lg:row-start-2 col-start-1 lg:col-start-8 col-span-10 lg:col-span-3 flex justify-end ml-2">
-            <Button className="hover:bg-slate-400 rounded w-full" onClick={() => {switchToProvider(providerLink)}}>
-              Switch to provider
-            </Button>
-          </div>
-        </>
-        :
-        <div className="text-green-600 row-start-5 lg:row-start-2 col-start-1 lg:col-start-8 col-span-10 lg:col-span-3">Selected</div>
-      }
-      <div className={cn("row-start-3 row-span-2 lg:row-start-2 lg:row-span-1 flex items-center col-start-1 col-span-10 lg:col-span-6 lg:col-start-2 flex-wrap", {"py-2": isSelected})}>
-        {disabled ?
-        <div>API failed</div> :
-        checkerNamesList.map((checkerName) => 
-          <Badge 
-            key={checkerName} 
-            variant={"outline"} 
-            className={cn("m-0.5", {"border-red-600 cursor-pointer": failedChecks.includes(checkerName)})}
-            onClick={() => handleBadgeClick(checkerName)}
+    <Card
+      className={cn(
+        "relative flex flex-col gap-2 my-1 p-2 dark:text-white",
+        "lg:flex-row lg:flex-wrap lg:items-center",
+        {
+          "outline outline-2 outline-offset-2 mb-6": isTop,
+          "border-green-600": isSelected,
+        }
+      )}
+    >
+      {!isSelected && (
+        <div className="absolute top-0 right-2">
+          <Button
+            className="p-1 rounded"
+            onClick={() => deleteProvider(providerLink)}
+            variant="ghost"
           >
-              {checkerName}
-          </Badge>
-        )}
+            <X className="w-4 h-4 dark:text-white" />
+          </Button>
+        </div>
+      )}
+      <div className="flex flex-wrap justify-around p-4 w-full">
+        <div className="flex flex-col w-full md:w-1/2">
+          <div className="flex gap-4">
+            <p>{index}</p>
+            <p
+              className={cn("text-center", {
+                "text-red-600": disabled,
+              })}
+            >
+              {providerLink}
+            </p>
+          </div>
+          <div className={"flex flex-wrap items-center gap-2 py-2 pl-4"}>
+            {disabled ? (
+              <div>API failed</div>
+            ) : (
+              checkerNamesList.map((checkerName) => (
+                <Badge
+                  key={checkerName}
+                  variant="outline"
+                  className={cn("m-0.5", {
+                    "border-red-600 cursor-pointer":
+                      failedChecks.includes(checkerName),
+                  })}
+                  onClick={() => handleBadgeClick(checkerName)}
+                >
+                  {checkerName}
+                </Badge>
+              ))
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col w-full md:w-1/2 align-center justify-center">
+          {isHealthCheckerActive && (
+            <div className="flex w-full justify-center align-center">
+              {score !== -1 ? (
+                score !== 0 && (
+                  <div className="flex gap-6">
+                    <p>Latency: {latency}</p>
+                    <p>Score: {score.toFixed(3)}</p>
+                  </div>
+                )
+              ) : (
+                <Loader2 className="h-6 w-6 animate-spin" />
+              )}
+            </div>
+          )}
+          <div className="flex w-full items-end justify-center text-center">
+            {!isSelected ? (
+              <Button
+                className="hover:bg-slate-400 rounded w-full max-w-[200px]"
+                onClick={() => switchToProvider(providerLink)}
+              >
+                Set Main
+              </Button>
+            ) : (
+              <div className="text-green-600">Selected</div>
+            )}
+          </div>
+        </div>
       </div>
     </Card>
-  )
+  );
 };
 
 export default ProviderCard;
