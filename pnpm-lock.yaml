@@ -4,12 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  hiveio-toolset:
-    '@hiveio/wax':
-      specifier: 1.27.6-rc7-stable.250513162056
-      version: 1.27.6-rc7-stable.250513162056
-
 importers:
 
   .:
@@ -22,7 +16,7 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@hiveio/wax':
-        specifier: catalog:hiveio-toolset
+        specifier: 1.27.6-rc7-stable.250513162056
         version: 1.27.6-rc7-stable.250513162056
       '@radix-ui/react-dialog':
         specifier: ^1.1.6
