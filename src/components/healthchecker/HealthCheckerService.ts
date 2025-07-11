@@ -51,7 +51,6 @@ class HealthCheckerService extends EventTarget {
    * @param serviceKey 
    * @param apiCheckers 
    * @param defaultProviders 
-   * @param healthChecker 
    * @param nodeAddress 
    * @param changeNodeAddress 
    * @param enableLogs 
@@ -61,18 +60,17 @@ class HealthCheckerService extends EventTarget {
     serviceKey: string,
     apiCheckers: ApiChecker[],
     defaultProviders: string[],
-    healthChecker: HealthChecker,
     nodeAddress: string | null,
     changeNodeAddress: (node: string | null) => void,
     enableLogs?: boolean,
   ) {
     super();
     this.serviceKey = serviceKey;
-    this.healthChecker = healthChecker;
     this.apiCheckers = apiCheckers;
     this.nodeAddress = nodeAddress;
     this.defaultProviders = defaultProviders;
     this.isActive = false;
+    this.healthChecker = new HealthChecker();
     this.readLocalProvidersFromLocalStorage();
     this.changeNodeAddress = changeNodeAddress;
     this.initializeHealthChecker();
