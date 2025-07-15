@@ -15,10 +15,12 @@ export default defineConfig({
       },
       name: 'healthchecker-component', 
       fileName: (format) => `healthchecker-component.${format}.js`,
-      formats: ['es', 'cjs', 'umd' ],
+      formats: ['es'],
     }, 
     rollupOptions: { 
-      external: Object.keys(peerDependencies), 
+      external: [...Object.keys(peerDependencies), 
+        "@hiveio/wax/vite" // Add this for proper build - vite does not detect hiveio/wax/vite from peerDependencies
+      ],
       output: { globals: { react: 'React', 'react-dom': 'ReactDOM' } } 
     }
   },

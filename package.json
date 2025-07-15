@@ -8,7 +8,6 @@
   "exports": {
     ".": {
       "import": "./dist/healthchecker-component.es.js",
-      "require": "./dist/healthchecker-component.umd.js",
       "types": "./dist/index.d.ts"
     }
   },
@@ -26,10 +25,10 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.4.12"
+    "tailwindcss": "^3.4.12",
+    "@hiveio/wax": "catalog:hiveio-toolset"
   },
   "devDependencies": {
-    "@hiveio/wax": "catalog:hiveio-toolset",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-slot": "^1.1.2",
     "@types/react": "^18.2.66",
