@@ -7,8 +7,8 @@ settings:
 catalogs:
   hiveio-toolset:
     '@hiveio/wax':
-      specifier: 1.27.6-rc10
-      version: 1.27.6-rc10
+      specifier: 1.27.6-rc10-stable.250718075612
+      version: 1.27.6-rc10-stable.250718075612
 
 importers:
 
@@ -16,7 +16,7 @@ importers:
     dependencies:
       '@hiveio/wax':
         specifier: catalog:hiveio-toolset
-        version: 1.27.6-rc10
+        version: 1.27.6-rc10-stable.250718075612
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -487,8 +487,8 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@hiveio/wax@1.27.6-rc10':
-    resolution: {integrity: sha1-Ie5tXlNXxkOMl9ijIa7oX4hFAu0=, tarball: https://gitlab.syncad.com/api/v4/projects/419/packages/npm/@hiveio/wax/-/@hiveio/wax-1.27.6-rc10.tgz}
+  '@hiveio/wax@1.27.6-rc10-stable.250718075612':
+    resolution: {integrity: sha1-TYKUMQ158pF6HL+KoE1ze7dYQ/M=, tarball: https://gitlab.syncad.com/api/v4/projects/419/packages/npm/@hiveio/wax/-/@hiveio/wax-1.27.6-rc10-stable.250718075612.tgz}
     engines: {node: ^20.11 || >= 21.2}
 
   '@humanwhocodes/config-array@0.13.0':
@@ -2608,7 +2608,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@hiveio/wax@1.27.6-rc10':
+  '@hiveio/wax@1.27.6-rc10-stable.250718075612':
     dependencies:
       events: 3.3.0
       long: 5.3.1
