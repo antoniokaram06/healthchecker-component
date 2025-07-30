@@ -72,6 +72,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
               className={cn("text-center", {
                 "text-red-600": disabled,
               })}
+              data-testid="hc-api-name"
             >
               {providerLink}
             </p>
@@ -89,6 +90,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
                       failedChecks.includes(checkerName),
                   })}
                   onClick={() => handleBadgeClick(checkerName)}
+                  data-testid="hc-validator-badge"
                 >
                   {checkerName}
                 </Badge>
@@ -116,11 +118,12 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
               <Button
                 className="hover:bg-slate-400 rounded w-full max-w-[200px]"
                 onClick={() => switchToProvider(providerLink)}
+                data-testid="hc-set-api-button"
               >
                 Set Main
               </Button>
             ) : (
-              <div className="text-green-600">Selected</div>
+              <div className="text-green-600" data-testid="hc-selected">Selected</div>
             )}
           </div>
         </div>
