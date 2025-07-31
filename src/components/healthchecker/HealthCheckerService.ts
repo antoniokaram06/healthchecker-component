@@ -252,7 +252,11 @@ class HealthCheckerService extends EventTarget {
   }
 
   resetProviders = () => {
-    this.writeLocalProvidersToLocalStorage(this?.defaultProviders || []);
+    if (this.nodeAddress && !this?.defaultProviders?.includes(this.nodeAddress)) {
+      this.writeLocalProvidersToLocalStorage([...this?.defaultProviders || [], this.nodeAddress] );
+    } else {
+      this.writeLocalProvidersToLocalStorage(this?.defaultProviders || []);
+    }
     this.scoredEndpoints = [];
     this.healthChecker?.unregisterAll();
     this.registerCalls();

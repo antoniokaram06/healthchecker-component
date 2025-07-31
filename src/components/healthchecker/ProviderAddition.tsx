@@ -52,6 +52,7 @@ const ProviderAddition: React.FC<ProviderAdditionProps> = ({
         />
         <Button
           disabled={providerValue === ""}
+          className="hover:bg-slate-400"
           onClick={() => {
             onSubmit(providerValue);
           }}
