@@ -1,0 +1,20 @@
+{
+  "Add": "Добавить",
+  "EnterACustomHiveNodeURL": "Введите URL пользовательского узла Hive.",
+  "AddCustomNode": "Добавить пользовательский узел: ",
+  "title": "Проверка состояния API-серверов",
+  "continuousCheck": "Непрерывная проверка",
+  "filterPlaceholder": "Фильтровать по URL…",
+  "clearFilter": "Очистить фильтр",
+  "restoreDefaults": "Восстановить набор API-серверов по умолчанию",
+  "validatorError": "Ошибка валидатора",
+  "message": "Сообщение:",
+  "path": "Путь:",
+  "params": "Параметры:",
+  "clearError": "Очистить ошибку",
+  "switchToBest": "Переключиться на лучший",
+  "evaluating": "Идёт оценка",
+  "endpointFound": "Точка подключения найдена, переключение…",
+  "alreadyBest": "Уже используется лучший провайдер",
+  "setMain": "Установить основной"
+}

@@ -1,0 +1,20 @@
+{
+  "Add": "Dodaj",
+  "EnterACustomHiveNodeURL": "Wprowadź niestandardowy adres URL węzła Hive.",
+  "AddCustomNode": "Dodaj niestandardowy węzeł: ",
+  "title": "Monitor stanu serwerów API",
+  "continuousCheck": "Stała kontrola",
+  "filterPlaceholder": "Filtruj po adresie URL…",
+  "clearFilter": "Wyczyść filtr",
+  "restoreDefaults": "Przywróć domyślny zestaw serwerów API",
+  "validatorError": "Błąd walidatora",
+  "message": "Wiadomość:",
+  "path": "Ścieżka:",
+  "params": "Parametry:",
+  "clearError": "Wyczyść błąd",
+  "switchToBest": "Przełącz na najlepszy",
+  "evaluating": "Trwa ocena",
+  "endpointFound": "Znaleziono punkt końcowy, trwa przełączanie…",
+  "alreadyBest": "Już używasz najlepszego dostawcy",
+  "setMain": "Ustaw jako główny"
+}

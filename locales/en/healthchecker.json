@@ -1,0 +1,20 @@
+{
+  "title": "Healthchecker for API servers",
+  "continuousCheck": "Continuous Check",
+  "filterPlaceholder": "Filter by URL…",
+  "clearFilter": "Clear filter",
+  "restoreDefaults": "Restore default API server set",
+  "validatorError": "validator error",
+  "message": "Message:",
+  "path": "Path:",
+  "params": "Params:",
+  "clearError": "Clear error",
+  "switchToBest": "Switch to Best",
+  "evaluating": "Evaluating",
+  "endpointFound": "Endpoint found, switching",
+  "alreadyBest": "Already on the best provider",
+  "setMain": "Set Main",
+  "AddCustomNode": "Add Custom Node: ",
+  "EnterACustomHiveNodeURL": "Enter a custom Hive node URL.",
+  "Add": "Add"
+}

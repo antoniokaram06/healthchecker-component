@@ -1,0 +1,20 @@
+{
+  "Add": "添加",
+  "EnterACustomHiveNodeURL": "输入自定义 Hive 节点 URL.",
+  "AddCustomNode": "添加自定义节点：",
+  "title": "API 服务器健康检查",
+  "continuousCheck": "持续监控",
+  "filterPlaceholder": "按 URL 过滤…",
+  "clearFilter": "清除过滤",
+  "restoreDefaults": "恢复默认 API 服务器集",
+  "validatorError": "验证器错误",
+  "message": "消息：",
+  "path": "路径：",
+  "params": "参数：",
+  "clearError": "清除错误",
+  "switchToBest": "切换到最佳",
+  "evaluating": "正在评估",
+  "endpointFound": "找到端点，正在切换…",
+  "alreadyBest": "已使用最佳提供者",
+  "setMain": "设置为主要"
+}

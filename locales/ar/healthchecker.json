@@ -1,0 +1,20 @@
+{
+  "Add": "إضافة",
+  "EnterACustomHiveNodeURL": "أدخل عنوان URL لعقدة Hive مخصصة.",
+  "AddCustomNode": "إضافة عقدة مخصصة: ",
+  "title": "مدقق صحة خوادم API",
+  "continuousCheck": "التحقق المستمر",
+  "filterPlaceholder": "تصفية حسب URL…",
+  "clearFilter": "مسح التصفية",
+  "restoreDefaults": "استعادة مجموعة خوادم API الافتراضية",
+  "validatorError": "خطأ في التحقق",
+  "message": "الرسالة:",
+  "path": "المسار:",
+  "params": "المعلمات:",
+  "clearError": "مسح الخطأ",
+  "switchToBest": "التبديل إلى الأفضل",
+  "evaluating": "جارٍ التقييم",
+  "endpointFound": "تم العثور على نقطة النهاية، جارٍ التبديل",
+  "alreadyBest": "أنت بالفعل على أفضل مزود",
+  "setMain":  "تعيين رئيسي"
+}

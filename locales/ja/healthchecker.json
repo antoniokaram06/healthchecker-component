@@ -1,0 +1,20 @@
+{
+  "Add": "追加",
+  "EnterACustomHiveNodeURL": "カスタム Hive ノードの URL を入力してください。",
+  "AddCustomNode": "カスタムノードを追加: ",
+  "title": "APIサーバー用ヘルスチェッカー",
+  "continuousCheck": "継続的チェック",
+  "filterPlaceholder": "URLでフィルタ…",
+  "clearFilter": "フィルタをクリア",
+  "restoreDefaults": "デフォルトのAPIサーバーセットを復元",
+  "validatorError": "バリデーターエラー",
+  "message": "メッセージ:",
+  "path": "パス:",
+  "params": "パラメータ:",
+  "clearError": "エラーをクリア",
+  "switchToBest": "最適なものに切り替え",
+  "evaluating": "評価中",
+  "endpointFound": "エンドポイントが見つかりました、切り替え中",
+  "alreadyBest": "すでに最適なプロバイダーです",
+  "setMain": "メインに設定"
+}

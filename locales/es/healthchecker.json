@@ -1,0 +1,20 @@
+{
+    "Add": "Agregar",
+    "EnterACustomHiveNodeURL": "Ingrese una URL de nodo Hive personalizada.",
+    "AddCustomNode": "Agregar nodo personalizado: ",
+    "title": "Verificador de salud de servidores API",
+    "continuousCheck": "Chequeo continuo",
+    "filterPlaceholder": "Filtrar por URL…",
+    "clearFilter": "Limpiar filtro",
+    "restoreDefaults": "Restaurar conjunto de servidores API predeterminados",
+    "validatorError": "error de validador",
+    "message": "Mensaje:",
+    "path": "Ruta:",
+    "params": "Parámetros:",
+    "clearError": "Borrar error",
+    "switchToBest": "Cambiar al mejor",
+    "evaluating": "Evaluando",
+    "endpointFound": "Endpoint encontrado, cambiando",
+    "alreadyBest": "Ya en el mejor proveedor",
+    "setMain":"Establecer principal"
+  }
